@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mad Lib builder</title>
+<style>
+:root{--bg:#070d1a;--panel:#101a2e;--line:#22365a;--ink:#e8edf3;--mut:#93a3bd;--acc:#2dd4bf;--hot:#fcd34d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.4 -apple-system,Segoe UI,Roboto,Inter,sans-serif}
+.w{max-width:640px;margin:0 auto;padding:16px}
+h1{font-size:26px;margin:.2em 0 .1em}h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin:22px 0 8px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+button,.btn{font:inherit;color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:14px 10px;min-height:54px;cursor:pointer;text-align:center}
+button[aria-pressed=true]{border-color:var(--acc);background:#0f3a3c}
+.go{background:var(--acc);color:#04201d;font-weight:800;border:0;width:100%}
+.sentence{font-size:24px;line-height:1.35;font-weight:700;background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:16px}
+.sentence mark{background:none;color:var(--hot)}
+textarea,input{width:100%;font:inherit;color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:12px}
+textarea{min-height:200px;font-size:14px}
+.row{display:flex;gap:8px}.row>*{flex:1}
+#qr{background:#fff;border-radius:16px;padding:14px;display:flex;justify-content:center;margin-top:10px}
+#qr svg{width:100%;max-width:340px;height:auto}
+.big{font-size:24px;font-weight:800;text-align:center;word-break:break-all;margin-top:10px}
+.mut{color:var(--mut);font-size:14px}
+</style></head><body><div class="w">
+<h1>Mad Lib builder</h1>
+<div class="mut">Tap the winner of each Kahoot question. Copy the prompt. Paste into the agent.</div>
+<div id="slots"></div>
+<h2>The idea</h2><div class="sentence" id="sentence"></div>
+<div class="row" style="margin-top:8px"><button id="rand">Randomize all</button><button id="clear">Clear</button></div>
+<h2>Where to publish</h2>
+<input id="deploy" placeholder="e.g. my Netlify site or Firebase Hosting site (type once)">
+<h2>Prompt for the agent</h2>
+<textarea id="prompt" readonly></textarea>
+<div class="row" style="margin-top:8px"><button class="go" id="copy">Copy prompt</button><button id="share">Share</button></div>
+<div class="mut" id="msg" role="status" style="margin-top:6px"></div>
+<h2>Stopwatch</h2>
+<div class="row"><button id="t">Start clock</button><div class="big" id="clock" style="margin:0;align-self:center">0:00</div></div>
+<h2>Reveal: QR for the room</h2>
+<input id="url" placeholder="Paste the deployed URL here" inputmode="url">
+<div id="qr" hidden></div><div class="big" id="urltxt"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" onerror="window.__noqr=1"></script>
+<script>
+var DATA = {"slots": [{"key": "type", "q": "Mad Lib 1 of 5: Build ___. What kind of app?", "kahoot": ["An arcade game", "A trivia quiz", "A random generator", "A tracker with charts"], "phrase": ["an arcade game", "a trivia quiz", "a random generator", "a tracker with charts"], "label": "What to build"}, {"key": "who", "q": "Mad Lib 2 of 5: It is for ___. Who uses it?", "kahoot": ["Sleep-deprived interns", "Night float residents", "Chief residents", "Attendings on rounds"], "phrase": ["sleep-deprived interns", "night float residents", "chief residents", "attendings on rounds"], "label": "Who it is for"}, {"key": "does", "q": "Mad Lib 3 of 5: It ___. What does it do?", "kahoot": ["Predicts how your shift will go", "Rates your coffee order", "Picks where the team eats lunch", "Assigns you a medical spirit animal"], "phrase": ["predicts how your shift will go", "rates your coffee order", "picks where the team eats lunch", "assigns you a medical spirit animal"], "label": "What it does"}, {"key": "style", "q": "Mad Lib 4 of 5: What should it look like?", "kahoot": ["Retro 8-bit arcade", "Pirate ship", "Space mission", "Cozy cafe"], "phrase": ["a retro 8-bit arcade", "a pirate ship", "a space mission", "a cozy cafe"], "label": "Style"}, {"key": "twist", "q": "Mad Lib 5 of 5: Pick one twist.", "kahoot": ["Confetti when you win", "Countdown to end of shift", "A daily dad joke", "A hidden easter egg"], "phrase": ["confetti when you win", "a countdown to the end of shift", "a daily dad joke", "a hidden easter egg"], "label": "The twist"}], "sentence": "Build {type} for {who} that {does}. Style it like {style}, and include {twist}.", "prompt": "You are building a small web app live, in front of an audience of about 90 medical residents at a lecture on AI in medicine. Work on your own and post a short progress update every few minutes.\n\nTHE IDEA (chosen by audience vote):\n{sentence}\n\nHARD RULES\n1. One self-contained file: index.html with inline CSS and JavaScript. No external libraries, fonts, images, CDN links, analytics, trackers or network calls.\n2. Mobile-first: readable on a phone, large tap targets, works offline once loaded.\n3. Family-friendly and safe for work. No patient data, no personal data, no medical advice or clinical decisions. It is entertainment only. If the idea touches medicine, make it obviously a joke and add a small disclaimer line.\n4. Do not ask for logins, names or any personal information. Store nothing.\n5. Footer text: \"Built live by AI at the AI in Medicine lecture, October 15, 2026. Not medical advice.\"\n6. Smoke test: include an inline self-test that runs when the page loads and shows \"Checks passed X of Y\" in the footer. At least 6 checks (page renders, main interaction works, no console errors, tap targets large enough, no external requests, footer present). Run it yourself before deploying and fix failures.\n7. Time limit: 20 minutes. A simple, polished result beats a complex, broken one.\n\nDEPLOY\nPublish index.html to: {deploy}\nReply with: the public URL, the test result, and three bullets: what you built, what you are unsure about, and what a human should double-check.\nIf deployment fails, paste the full index.html in your reply instead."};
+var pick = {}; var $ = function(i){return document.getElementById(i)};
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+function draw(){
+  var el=$('slots');el.innerHTML='';
+  DATA.slots.forEach(function(s,si){
+    var h=document.createElement('h2');h.textContent=(si+1)+'. '+s.label;el.appendChild(h);
+    var g=document.createElement('div');g.className='g';
+    s.kahoot.forEach(function(t,i){var b=document.createElement('button');b.textContent=t;
+      b.setAttribute('aria-pressed',pick[s.key]===i?'true':'false');
+      b.onclick=function(){pick[s.key]=i;draw();update()};g.appendChild(b)});
+    el.appendChild(g);
+  });
+}
+function sentence(){
+  var out=DATA.sentence,all=true;
+  DATA.slots.forEach(function(s){var v=pick[s.key];if(v===undefined){all=false;out=out.replace('{'+s.key+'}','___')}else out=out.replace('{'+s.key+'}',s.phrase[v])});
+  return {text:out,done:all};
+}
+function update(){
+  var s=sentence();$('sentence').textContent=s.text;
+  var dep=$('deploy').value.trim()||'[tell me where to publish: fill this in]';
+  $('prompt').value=DATA.prompt.replace('{sentence}',s.text).replace('{deploy}',dep);
+  store('madlib_deploy',$('deploy').value);
+}
+$('deploy').value=store('madlib_deploy')||'https://nchandler02-sudo.github.io/lecture-app/';
+$('deploy').oninput=update;
+$('rand').onclick=function(){DATA.slots.forEach(function(s){pick[s.key]=Math.floor(Math.random()*4)});draw();update()};
+$('clear').onclick=function(){pick={};draw();update()};
+$('copy').onclick=function(){var t=$('prompt');t.select();
+  (navigator.clipboard?navigator.clipboard.writeText(t.value):Promise.reject()).then(function(){$('msg').textContent='Copied.'},function(){document.execCommand('copy');$('msg').textContent='Copied (or press and hold to copy).'})};
+$('share').onclick=function(){if(navigator.share)navigator.share({text:$('prompt').value});else $('msg').textContent='Share is not available here. Use Copy.'};
+var t0=null,iv=null;
+$('t').onclick=function(){if(iv){clearInterval(iv);iv=null;$('t').textContent='Start clock';return}
+  t0=Date.now();$('t').textContent='Stop';iv=setInterval(function(){var s=Math.floor((Date.now()-t0)/1000);$('clock').textContent=Math.floor(s/60)+':'+('0'+s%60).slice(-2)},500)};
+$('url').oninput=function(){var u=this.value.trim();$('urltxt').textContent=u;var q=$('qr');q.hidden=true;q.innerHTML='';
+  if(u&&window.qrcode){try{var c=qrcode(0,'M');c.addData(u);c.make();q.innerHTML=c.createSvgTag({cellSize:8,margin:2,scalable:true});q.hidden=false}catch(e){}}};
+draw();update();
+</script></body></html>
