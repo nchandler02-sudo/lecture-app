@@ -1,15 +1,279 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI in Medicine: Live Mad Lib App</title>
-<style>:root{--bg:#070d1a;--panel:#101a2e;--line:#22365a;--ink:#e8edf3;--mut:#93a3bd;--acc:#2dd4bf;--hot:#fcd34d}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,Segoe UI,Roboto,sans-serif}
-.w{max-width:640px;margin:0 auto;padding:28px 18px}h1{font-size:30px;margin:.2em 0}.tag{color:var(--acc);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:13px}
-.s{font-size:22px;font-weight:700;background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:18px;line-height:1.5}
-.s mark{background:none;color:var(--hot)}.pill{display:inline-block;margin-top:18px;background:var(--acc);color:#04201d;font-weight:800;border-radius:999px;padding:10px 18px}
-ol{color:var(--mut)}footer{color:var(--mut);font-size:13px;margin-top:32px;border-top:1px solid var(--line);padding-top:12px}</style></head>
-<body><div class="w"><div class="tag">AI in Medicine · October 15, 2026</div>
-<h1>The Live Mad Lib App</h1>
-<p>During the lecture, you'll answer five Kahoot questions. Your votes fill in the blanks below, and AI builds the app live, in front of you.</p>
-<div class="s">Build <mark>___</mark> for <mark>___</mark> that <mark>___</mark>, styled like <mark>___</mark>, with <mark>___</mark>.</div>
-<ol><li>What kind of app?</li><li>Who uses it?</li><li>What does it do?</li><li>What should it look like?</li><li>Pick one twist.</li></ol>
-<span class="pill">Interactive app coming soon</span>
-<footer>Placeholder page. Entertainment only. Not medical advice.</footer></div></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0b0f17">
+<title>Pager Boss II: The Haunted Night Float</title>
+<style>
+:root{--bg:#0b0f17;--pan:#151c2b;--line:#2a3550;--ink:#e9eef7;--mut:#93a0b8;--acc:#7cf2c9;--hot:#ff5d73;--gold:#ffd166;--ghost:#b9c7ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,Segoe UI,Roboto,sans-serif;overscroll-behavior:none}
+.w{max-width:520px;margin:0 auto;padding:8px 10px calc(8px + env(safe-area-inset-bottom));min-height:100%;display:flex;flex-direction:column}
+#top{display:flex;align-items:center;gap:8px}
+#top h1{flex:1;font-size:18px;margin:0;letter-spacing:.02em}
+.ib{min-width:48px;min-height:48px;border-radius:12px;border:2px solid var(--line);background:var(--pan);color:var(--ink);font-size:20px;padding:0;cursor:pointer}
+#hud{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}
+.hb{background:var(--pan);border:1px solid var(--line);border-radius:10px;padding:5px 8px;font-size:12px;font-weight:700}
+.hb .row{display:flex;justify-content:space-between}
+.bar{height:12px;background:#000;border-radius:6px;overflow:hidden;margin-top:4px;border:1px solid #39445f}
+.bar i{display:block;height:100%;width:100%;transition:width .15s}
+#sanB{background:linear-gradient(90deg,#3ee6a8,#7cf2c9)}#bossB{background:linear-gradient(90deg,#ff5d73,#ff9f6b)}
+#stats{grid-column:1/3;display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--mut);padding:0 2px}
+#stats b{color:var(--ink)}
+#wrap{position:relative;flex:0 0 auto}
+canvas{width:100%;display:block;border-radius:14px;touch-action:none;background:#05070c;box-shadow:0 0 0 2px var(--line)}
+.ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:rgba(6,9,16,.9);border-radius:14px;padding:16px;overflow:auto}
+.ov[hidden]{display:none!important}
+.ov h2{margin:.2em 0;font-size:24px}.ov p{margin:.4em 0;color:#cfd7e6}
+.btn{font:inherit;font-weight:800;min-height:52px;min-width:180px;padding:12px 18px;border:0;border-radius:14px;background:var(--acc);color:#05261b;margin-top:10px;cursor:pointer}
+.btn.alt{background:var(--pan);color:var(--ink);border:2px solid var(--line)}
+.opts{display:grid;gap:8px;width:100%;max-width:340px;margin-top:8px}
+.opts .btn{margin:0;min-width:0;width:100%;background:var(--pan);color:var(--ink);border:2px solid var(--line);font-weight:700}
+.how{text-align:left;font-size:14px;max-width:340px}.how li{margin:4px 0}
+#rr{background:rgba(120,10,25,.92);animation:fl .35s infinite alternate}@keyframes fl{to{background:rgba(60,5,15,.95)}}
+#rrTimer{width:80%;height:10px;background:#0006;border-radius:5px;overflow:hidden;margin:6px 0}#rrTimer i{display:block;height:100%;background:var(--gold)}
+#rrArea{position:relative;width:100%;flex:1;min-height:200px}
+.tgt{position:absolute;width:64px;height:64px;border-radius:50%;border:0;background:#fff;color:#b0102a;font-size:26px;font-weight:900;transform:translate(-50%,-50%);cursor:pointer;padding:0}
+.card{background:linear-gradient(160deg,#1d2640,#11172a);border:2px solid var(--ghost);border-radius:18px;padding:16px;max-width:340px;box-shadow:0 0 30px #b9c7ff44}
+.card .em{font-size:54px}.card h3{margin:.1em 0;font-size:22px;color:var(--gold)}
+.card .q{font-style:italic;color:var(--ghost)}
+.disc{font-size:12px;color:var(--mut);margin:6px 0 0;text-align:center}
+footer{font-size:12px;color:var(--mut);margin-top:auto;padding-top:8px;text-align:center}
+#toast{position:absolute;left:50%;top:12px;transform:translateX(-50%);background:#000c;border:1px solid var(--line);padding:6px 12px;border-radius:10px;font-weight:700;font-size:14px;pointer-events:none;opacity:0;transition:opacity .3s;white-space:nowrap}
+</style></head><body><div class="w">
+<div id="top"><h1>👻📟 Pager Boss II</h1><button class="ib" id="muteB" aria-label="Toggle sound">🔊</button><button class="ib" id="pauseB" aria-label="Pause">⏸</button></div>
+<div id="hud">
+<div class="hb"><div class="row"><span>🧠 Sanity</span><span id="sanT">100</span></div><div class="bar"><i id="sanB"></i></div></div>
+<div class="hb"><div class="row"><span id="bossName">📟 Pager Boss</span><span id="bossT">100</span></div><div class="bar"><i id="bossB"></i></div></div>
+<div id="stats"><span>Phase <b id="phT">1</b>/3</span><span>⭐ <b id="scT">0</b></span><span>📝 <b id="ntT">0</b></span><span>🏆 <b id="hiT">0</b></span></div>
+</div>
+<div id="wrap"><canvas id="c" width="360" height="520"></canvas>
+<div id="toast"></div>
+<div class="ov" id="title"><div style="font-size:56px">👻📟👻</div><h2>Pager Boss II</h2><p><b>The Haunted Night Float</b></p><p>3:12 AM. "K 3.3, please advise."<br>The pager has become self-aware. The hospital is haunted by unfinished notes.</p>
+<button class="btn" id="playB">Start haunted shift</button><button class="btn alt" id="howB">How to play</button></div>
+<div class="ov" id="how" hidden><h2>How to play</h2><ul class="how">
+<li>👆 <b>Drag anywhere</b> on the hospital to move (or arrow keys / WASD).</li>
+<li>📝 Grab floating <b>unfinished notes</b>. Each one you finish flies at the Pager Boss and does damage.</li>
+<li>📨 Dodge pages. 👻 Avoid ghosts. Both drain your sanity.</li>
+<li>☕ Coffee and 🍪 snacks restore sanity. 🤫 A rare quiet moment silences the pager.</li>
+<li>🚨 <b>Surprise rapid response</b> interrupts everything. Win the mini-game fast!</li>
+<li>Beat 3 phases. Your choices reveal <b>the consult service you most want to avoid</b>.</li>
+<li>P or Space pauses. M mutes.</li></ul><button class="btn" id="howBack">Got it</button></div>
+<div class="ov" id="pause" hidden><h2>⏸ Paused</h2><p>Pretend you are charting.</p><button class="btn" id="resB">Resume</button><button class="btn alt" id="quitB">Quit to title</button></div>
+<div class="ov" id="quiz" hidden><h2 id="qzH"></h2><p id="qzQ"></p><div class="opts" id="qzO"></div></div>
+<div class="ov" id="rr" hidden><h2>🚨 SURPRISE RAPID RESPONSE 🚨</h2><p id="rrP"></p><div id="rrTimer"><i id="rrBar"></i></div><div id="rrArea"></div></div>
+<div class="ov" id="end" hidden><h2 id="enH"></h2><p id="enP"></p><p style="margin-top:8px">The consult service you most want to avoid:</p><div class="card" id="card"></div><button class="btn" id="againB">Another shift</button><button class="btn alt" id="titleB">Title screen</button></div>
+</div>
+<p class="disc">😂 A joke game for a lecture. Not real clinical guidance, and every consult team is secretly wonderful. Only your high score is kept, on this device.</p>
+<footer>Built live by AI at the AI in Medicine lecture, October 15, 2026. Not medical advice.<br><b id="st">Checks running…</b></footer></div>
+<script>
+"use strict";
+var errs=0;window.addEventListener('error',function(){errs++});
+var $=function(i){return document.getElementById(i)};
+var C=$('c'),X=C.getContext('2d'),W=360,H=520,TOP=110;
+/* ---------- audio ---------- */
+var AC=null,muted=false;
+function snd(f,d,type,vol,slide){if(muted)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();var o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime;
+o.type=type||'square';o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(slide,t+d);g.gain.setValueAtTime(vol||.06,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.02)}catch(e){}}
+var SFX={page:function(){snd(1400,.08,'square',.04);setTimeout(function(){snd(1400,.08,'square',.04)},110)},
+pick:function(){snd(660,.1,'triangle',.08,990)},hurt:function(){snd(200,.25,'sawtooth',.07,70)},hit:function(){snd(300,.12,'square',.06,600)},
+ghost:function(){snd(520,.6,'sine',.05,260)},alarm:function(){for(var i=0;i<4;i++)setTimeout(function(){snd(880,.15,'square',.06,660)},i*180)},
+win:function(){[523,659,784,1046].forEach(function(f,i){setTimeout(function(){snd(f,.2,'triangle',.08)},i*120)})},
+lose:function(){[392,330,262,196].forEach(function(f,i){setTimeout(function(){snd(f,.3,'sawtooth',.05)},i*180)})}};
+/* ---------- consult data ---------- */
+var CONS={
+neph:{n:'Nephrology',e:'🫘',t:'"Before we discuss the potassium… why is there no urine sodium?"',d:'They have opinions about your 3.3. Several. With a flowsheet.'},
+cards:{n:'Cardiology',e:'🫀',t:'"Did you get a repeat EKG? And a repeat of that repeat?"',d:'Reads your note faster than you wrote it. Finds the one missing troponin.'},
+surg:{n:'General Surgery',e:'🔪',t:'"We\'re scrubbed. Text us. No, not like that."',d:'Answers the page from the OR at 4 AM with exactly three words.'},
+gi:{n:'GI',e:'🌀',t:'"Is this really a scope-worthy question?"',d:'Will ask about the prep. You did not do the prep.'},
+neuro:{n:'Neurology',e:'🧠',t:'"Let\'s go over the full exam. All of it."',d:'Your exam had four words. Theirs will have forty reflexes.'},
+id:{n:'Infectious Disease',e:'🦠',t:'"Walk me through every antibiotic since birth."',d:'Remembers the culture you forgot to follow up on.'},
+endo:{n:'Endocrine',e:'🦋',t:'"Was that fingerstick before or after the juice box?"',d:'The juice box was very much involved.'},
+pulm:{n:'Pulm/Critical Care',e:'🫁',t:'"Can you describe the breathing… scientifically?"',d:'Will ask for a number you do not have, politely.'},
+heme:{n:'Heme/Onc',e:'🩸',t:'"Did anyone look at the smear? You. Look at the smear."',d:'The smear has been waiting for you all night.'},
+psych:{n:'Psychiatry',e:'🛋️',t:'"And how does that page make you feel?"',d:'Honestly the kindest consult on this list. You just fear the question.'},
+derm:{n:'Dermatology',e:'🔍',t:'"Was it a macule or a patch? Describe the border."',d:'Calls back at 9 AM sharp. You described it as "red".'},
+rads:{n:'Radiology',e:'🩻',t:'"What exactly is the clinical question?"',d:'Your indication said "eval". They noticed.'}};
+var QUIZ=[
+{h:'Phase 1 cleared! 👻',q:'A ghost hands you an unfinished note. You:',o:[['Sign it without reading','surg'],['Count every electrolyte in it','neph'],['Check the heart rhythm section first','cards'],['Ask how the note feels about itself','psych']]},
+{h:'Phase 2 cleared! 📟',q:'The pager whispers "please advise". Your first move:',o:[['Order a repeat lab, then another','neph'],['Ask for the full neuro exam','neuro'],['Request a culture of the pager','id'],['Check if anyone has a juice box','endo']]},
+{h:'Haunted break room 🍪',q:'Pick your 3 AM snack:',o:[['Banana (for the potassium)','neph'],['Sugar-free nothing','endo'],['Whatever the radiology reading room has','rads'],['A suspicious rash-red candy','derm']]},
+{h:'One more question…',q:'Which ghost scares you most?',o:[['The ghost of a lost smear','heme'],['The ghost of a missing troponin','cards'],['The ghost who says "describe the breathing"','pulm'],['The ghost of a colonoscopy prep','gi']]}];
+/* ---------- state ---------- */
+var mode='title',S,P,boss,shots,ghosts,notes,items,parts,proj,floaters,input={x:0,y:0,on:false},keys={},last=0,hi=0,quizIdx=0,shake=0;
+try{hi=+localStorage.getItem('pagerboss2_hi')||0}catch(e){}
+function reset(){S={t:0,score:0,san:100,inv:0,quiet:0,phase:1,notes:0,rrNext:14+Math.random()*8,flick:1,mess:0,cons:{},won:false,rrWins:0,rrFails:0};
+P={x:W/2,y:H-70,r:14,vx:0,vy:0};boss=newBoss(1);shots=[];ghosts=[];notes=[];items=[];parts=[];proj=[];floaters=[];quizIdx=0;
+for(var k in CONS)S.cons[k]=0;S.cons.neph=1;}
+function newBoss(ph){return{x:W/2,y:62,hp:100,max:100,t:0,cd:1.4,ph:ph,vx:1,ang:0,hurt:0}}
+var PAGES=['K 3.3??','pls advise','Tylenol?','diet order','bed 4 ok?','call back','fax came','pt wants nap','sign pls','BOO','repeat K?'];
+/* ---------- helpers ---------- */
+function rnd(a,b){return a+Math.random()*(b-a)}
+function burst(x,y,col,n,sp){for(var i=0;i<(n||12);i++){var a=Math.random()*6.283,v=rnd(30,sp||140);parts.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:rnd(.3,.8),c:col})}}
+function float(x,y,t,c){floaters.push({x:x,y:y,t:t,c:c||'#fff',l:1})}
+var toastT;function toast(t){var e=$('toast');e.textContent=t;e.style.opacity=1;clearTimeout(toastT);toastT=setTimeout(function(){e.style.opacity=0},1600)}
+function show(id,on){$(id).hidden=!on}
+/* ---------- boss attacks ---------- */
+function shoot(x,y,a,sp,m){shots.push({x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,m:m||PAGES[Math.random()*PAGES.length|0]})}
+function bossAttack(){var b=boss,aim=Math.atan2(P.y-b.y,P.x-b.x),sp=95+b.ph*25;
+var r=Math.random();
+if(b.ph==1||r<.4){shoot(b.x,b.y+18,aim+rnd(-.2,.2),sp);if(b.ph>1)shoot(b.x,b.y+18,aim+.35,sp),shoot(b.x,b.y+18,aim-.35,sp)}
+else if(r<.7){var n=6+b.ph*2;for(var i=0;i<n;i++)shoot(b.x,b.y,Math.PI*(i+.5)/n,sp*.8,'•page•');toast('📟 PAGE STORM!')}
+else{b.spiral=1.6;toast('📟 Overhead page spiral!')}
+SFX.page();b.cd=Math.max(.55,1.6-b.ph*.3-S.t/200)}
+/* ---------- update ---------- */
+function update(dt){S.t+=dt;var b=boss;b.t+=dt;
+// player
+var ax=0,ay=0;if(input.on){ax=input.x-P.x;ay=input.y-P.y}
+if(keys.ArrowLeft||keys.a)ax=-60;if(keys.ArrowRight||keys.d)ax=60;if(keys.ArrowUp||keys.w)ay=-60;if(keys.ArrowDown||keys.s)ay=60;
+var d=Math.hypot(ax,ay);if(d>2){var v=Math.min(d,(input.on?260:200)*dt);P.x+=ax/d*v;P.y+=ay/d*v}
+P.x=Math.max(14,Math.min(W-14,P.x));P.y=Math.max(TOP+14,Math.min(H-14,P.y));
+if(S.inv>0)S.inv-=dt;if(S.quiet>0)S.quiet-=dt;if(b.hurt>0)b.hurt-=dt;
+S.san-=dt*(0.8+S.phase*.35);S.score+=dt*5;
+// boss
+b.x+=Math.sin(b.t*(.7+b.ph*.25))*(1.2+b.ph*.6);b.x=Math.max(40,Math.min(W-40,b.x));
+if(S.quiet<=0){b.cd-=dt;if(b.cd<=0)bossAttack();if(b.spiral>0){b.spiral-=dt;b.ang+=dt*7;if((b.t*20|0)%2==0&&Math.random()<.5)shoot(b.x,b.y,b.ang,110,'•')}}
+// spawns
+if(Math.random()<dt*(.9+S.phase*.2)&&notes.length<6)notes.push({x:rnd(30,W-30),y:rnd(TOP+30,H-40),ph:Math.random()*6,l:9});
+if(Math.random()<dt*(.15+S.phase*.12)&&ghosts.length<2+S.phase*2){var side=Math.random()<.5;ghosts.push({x:side?-20:W+20,y:rnd(TOP+20,H-30),sp:rnd(25,40)+S.phase*10,ph:Math.random()*6});SFX.ghost()}
+if(Math.random()<dt*.35&&items.length<3){var k=Math.random();items.push({x:rnd(30,W-30),y:rnd(TOP+30,H-30),t:k<.55?'☕':k<.88?'🍪':'🤫',l:7})}
+S.mess=Math.min(1,S.t/150);
+// shots
+shots.forEach(function(s){s.x+=s.vx*dt;s.y+=s.vy*dt;if(S.inv<=0&&Math.hypot(s.x-P.x,s.y-P.y)<P.r+8){s.dead=1;hurt(9,'📨 '+s.m)}});
+shots=shots.filter(function(s){return !s.dead&&s.y<H+30&&s.y>-30&&s.x>-70&&s.x<W+70});
+// ghosts
+ghosts.forEach(function(g){g.ph+=dt*3;var a=Math.atan2(P.y-g.y,P.x-g.x);g.x+=Math.cos(a)*g.sp*dt;g.y+=Math.sin(a)*g.sp*dt+Math.sin(g.ph)*.4;
+if(S.inv<=0&&Math.hypot(g.x-P.x,g.y-P.y)<P.r+12){g.dead=1;burst(g.x,g.y,'#b9c7ff',18);hurt(14,'👻 Boo!')}});
+ghosts=ghosts.filter(function(g){return !g.dead});
+// notes
+notes.forEach(function(n){n.ph+=dt*2;n.l-=dt;if(Math.hypot(n.x-P.x,n.y-P.y)<P.r+14){n.dead=1;S.notes++;S.score+=20;SFX.pick();burst(n.x,n.y,'#ffd166',10);
+proj.push({x:n.x,y:n.y,t:0})}});notes=notes.filter(function(n){return !n.dead&&n.l>0});
+proj.forEach(function(p){var a=Math.atan2(boss.y-p.y,boss.x-p.x);p.t+=dt;var sp=260+p.t*200;p.x+=Math.cos(a)*sp*dt;p.y+=Math.sin(a)*sp*dt;
+if(Math.hypot(boss.x-p.x,boss.y-p.y)<24){p.dead=1;damageBoss(9)}});proj=proj.filter(function(p){return !p.dead});
+// items
+items.forEach(function(i){i.l-=dt;if(Math.hypot(i.x-P.x,i.y-P.y)<P.r+14){i.dead=1;SFX.pick();
+if(i.t=='☕'){S.san=Math.min(100,S.san+16);float(i.x,i.y,'+16 sanity','#7cf2c9')}else if(i.t=='🍪'){S.san=Math.min(100,S.san+9);S.cons.endo+=.3;float(i.x,i.y,'+9 snack','#7cf2c9')}
+else{S.quiet=5;shots=[];toast('🤫 A rare moment of quiet…');S.score+=50}}});items=items.filter(function(i){return !i.dead&&i.l>0});
+// particles
+parts.forEach(function(p){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.96;p.vy*=.96;p.l-=dt});parts=parts.filter(function(p){return p.l>0});
+floaters.forEach(function(f){f.y-=30*dt;f.l-=dt});floaters=floaters.filter(function(f){return f.l>0});
+if(shake>0)shake-=dt;
+S.flick=Math.random()<.04+S.phase*.02?rnd(.3,.7):Math.min(1,S.flick+dt*3);
+S.rrNext-=dt;if(S.rrNext<=0)startRR();
+if(S.san<=0)endGame(false)}
+function hurt(n,msg){S.san-=n;S.inv=.9;shake=.25;SFX.hurt();burst(P.x,P.y,'#ff5d73',14);float(P.x,P.y-20,msg,'#ff5d73')}
+function damageBoss(n){boss.hp-=n;boss.hurt=.15;SFX.hit();burst(boss.x,boss.y,'#ffd166',8);S.score+=10;
+if(boss.hp<=0){boss.hp=0;S.score+=300*S.phase;SFX.win();burst(boss.x,boss.y,'#fff',50,260);shots=[];
+if(S.phase>=3){S.won=true;mode='wait';setTimeout(function(){if(mode=='wait')endGame(true)},400)}else{mode='wait';setTimeout(function(){if(mode=='wait')openQuiz()},500)}}}
+/* ---------- quiz ---------- */
+function openQuiz(){var q=QUIZ[quizIdx%QUIZ.length];mode='quiz';$('qzH').textContent=q.h;$('qzQ').textContent=q.q;var o=$('qzO');o.innerHTML='';
+q.o.forEach(function(op){var b=document.createElement('button');b.className='btn';b.textContent=op[0];b.onclick=function(){S.cons[op[1]]+=2;quizIdx++;
+if(quizIdx==2&&S.phase==2){openQuiz2();return}nextPhase()};o.appendChild(b)});show('quiz',1)}
+function openQuiz2(){quizIdx=2;var q=QUIZ[2];$('qzH').textContent=q.h;$('qzQ').textContent=q.q;var o=$('qzO');o.innerHTML='';
+q.o.forEach(function(op){var b=document.createElement('button');b.className='btn';b.textContent=op[0];b.onclick=function(){S.cons[op[1]]+=2;quizIdx=3;nextPhase()};o.appendChild(b)})}
+function nextPhase(){show('quiz',0);S.phase++;boss=newBoss(S.phase);S.san=Math.min(100,S.san+25);S.rrNext=Math.min(S.rrNext,8+Math.random()*6);
+toast(['','','📟 PHASE 2: The pager learns to vibrate','📟 FINAL PHASE: The pager becomes a ghost'][S.phase]);mode='play';last=performance.now()}
+/* ---------- rapid response ---------- */
+var RR=null;
+function startRR(){mode='rr';SFX.alarm();var a=$('rrArea');a.innerHTML='';var kind=['bells','order','hold','find'][Math.random()*4|0];
+if(S.forceRR)kind=S.forceRR;RR={kind:kind,t:5.5-S.phase*.4,max:5.5-S.phase*.4,left:0,next:1};
+if(kind=='bells'){$('rrP').textContent='Tap all 6 alarm bells! 🔔';RR.left=6;for(var i=0;i<6;i++)addT('🔔',function(b){b.remove();if(--RR.left<=0)rrDone(true)})}
+else if(kind=='order'){$('rrP').textContent='Tap the rooms in order: 1 → 5';RR.left=5;for(var j=1;j<=5;j++)(function(n){addT(n,function(b){if(n==RR.next){b.remove();RR.next++;snd(400+n*100,.08,'triangle',.07);if(n==5)rrDone(true)}else{RR.t-=.7;b.animate([{transform:'translate(-50%,-50%) scale(1.3)'},{transform:'translate(-50%,-50%)'}],200)}})})(j)}
+else if(kind=='hold'){$('rrP').textContent='HOLD the elevator door until the bar fills! 🛗';RR.hold=0;var b=addT('🛗',null);b.style.left='50%';b.style.top='50%';b.style.width=b.style.height='110px';b.style.fontSize='48px';
+var dn=function(e){e.preventDefault();RR.holding=1},up=function(){RR.holding=0};b.addEventListener('pointerdown',dn);b.addEventListener('pointerup',up);b.addEventListener('pointerleave',up);RR.btn=b}
+else{$('rrP').textContent='Find the crash cart! Ghosts are hiding it. 🛒';var pos=Math.random()*6|0;for(var k=0;k<6;k++)(function(k){addT('🚪',function(b){if(k==pos){b.textContent='🛒';setTimeout(function(){rrDone(true)},250)}else{b.textContent='👻';b.disabled=true;RR.t-=.6;SFX.ghost()}})})(k)}
+show('rr',1)}
+function addT(label,fn){var b=document.createElement('button');b.className='tgt';b.textContent=label;b.style.left=rnd(14,86)+'%';b.style.top=rnd(16,84)+'%';
+if(fn)b.addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation();fn(b)});$('rrArea').appendChild(b);return b}
+function updateRR(dt){RR.t-=dt;if(RR.kind=='hold'){if(RR.holding){RR.hold+=dt;if(RR.hold>=1.8)return rrDone(true)}$('rrP').textContent='HOLD the elevator door! 🛗 '+Math.min(100,RR.hold/1.8*100|0)+'%'}
+$('rrBar').style.width=Math.max(0,RR.t/RR.max*100)+'%';if(RR.t<=0)rrDone(false)}
+function rrDone(ok){if(mode!='rr')return;show('rr',0);mode='play';last=performance.now();S.rrNext=16+Math.random()*12;
+if(ok){S.score+=150;S.rrWins++;damageBoss(12);toast('✅ Rapid response handled! +150');SFX.win()}else{S.san-=18;S.rrFails++;S.cons.pulm+=1;toast('😵 Rapid response chaos! -18 sanity');SFX.lose()}}
+/* ---------- end ---------- */
+function topConsult(){var best='neph',bv=-1;for(var k in S.cons){var v=S.cons[k]+Math.random()*.5;if(v>bv){bv=v;best=k}}return best}
+function endGame(won){if(mode=='end')return;mode='end';S.score=Math.floor(S.score+(won?S.san*5:0));
+if(S.score>hi){hi=S.score;try{localStorage.setItem('pagerboss2_hi',hi)}catch(e){}}
+if(S.notes>=25)S.cons.rads+=1.5;if(S.rrWins>=3)S.cons.surg+=1;
+var k=topConsult(),c=CONS[k];$('enH').textContent=won?'🏆 You defeated the Pager Boss!':'💀 The pager wins… this time';
+$('enP').innerHTML='Score <b>'+S.score+'</b> · Survived '+(S.t|0)+'s · Notes finished '+S.notes+(S.score>=hi&&S.score>0?'<br>🎉 New high score!':'');
+$('card').innerHTML='<div class="em">'+c.e+'</div><h3>'+c.n+'</h3><p class="q">'+c.t+'</p><p>'+c.d+'</p>';
+(won?SFX.win:SFX.lose)();show('end',1);hud()}
+/* ---------- draw ---------- */
+var BG=null;function makeBG(){BG=document.createElement('canvas');BG.width=W;BG.height=H;var g=BG.getContext('2d');g.fillStyle='#1a2130';g.fillRect(0,0,W,H);
+for(var y=TOP;y<H;y+=40)for(var x=0;x<W;x+=40){g.fillStyle=((x+y)/40)%2?'#222b3d':'#1e2636';g.fillRect(x,y,40,40)}
+g.fillStyle='#10151f';g.fillRect(0,0,W,TOP);g.fillStyle='#2a3550';g.fillRect(0,TOP-4,W,4);
+g.font='20px sans-serif';g.textAlign='center';g.globalAlpha=.55;[['🚪',30,TOP+20],['🛏️',320,H-30],['🪑',40,H-30],['🖥️',180,TOP+18],['🚪',330,TOP+20]].forEach(function(e){g.fillText(e[0],e[1],e[2])})}
+var MESS=[];for(var i=0;i<40;i++)MESS.push({x:Math.random()*W,y:TOP+20+Math.random()*(H-TOP-30),t:['📄','📄','🕸️','🥤','📋','🧦','🍕','📄'][i%8],r:Math.random()*6,at:i/40});
+function draw(){if(!BG)makeBG();X.save();if(shake>0)X.translate(rnd(-4,4),rnd(-4,4));X.drawImage(BG,0,0);
+X.textAlign='center';X.textBaseline='middle';
+// mess grows
+X.globalAlpha=.6;X.font='16px sans-serif';MESS.forEach(function(m){if(m.at<S.mess){X.save();X.translate(m.x,m.y);X.rotate(m.r);X.fillText(m.t,0,0);X.restore()}});X.globalAlpha=1;
+// lights
+for(var i=0;i<3;i++){X.fillStyle=S.flick<.8&&i==1?'#555':'#eaffd8';X.fillRect(40+i*115,6,60,6)}
+// items/notes
+X.font='24px sans-serif';items.forEach(function(it){X.globalAlpha=Math.min(1,it.l);X.fillText(it.t,it.x,it.y)});
+notes.forEach(function(n){X.globalAlpha=Math.min(1,n.l);X.save();X.translate(n.x,n.y+Math.sin(n.ph)*5);X.rotate(Math.sin(n.ph)*.2);X.shadowColor='#ffd166';X.shadowBlur=12;X.font='24px sans-serif';X.fillText('📝',0,0);X.restore()});X.globalAlpha=1;
+// boss
+var b=boss;X.save();X.translate(b.x,b.y+Math.sin(b.t*3)*4);X.rotate(Math.sin(b.t*25)*.1*(S.quiet>0?0:1));
+if(b.ph==3){X.globalAlpha=.75+Math.sin(b.t*5)*.2}X.shadowColor=b.hurt>0?'#fff':'#ff5d73';X.shadowBlur=b.hurt>0?30:18;X.font=(44+b.ph*6)+'px sans-serif';X.fillText(b.ph==3?'👻':'📟',0,0);
+if(b.ph==3){X.font='30px sans-serif';X.fillText('📟',0,4)}X.restore();X.globalAlpha=1;
+X.font='bold 10px sans-serif';X.fillStyle='#ff9fae';X.fillText(S.quiet>0?'(silenced… for now)':['','PAGER BOSS','PAGER BOSS: VIBRATE MODE','GHOST PAGER'][b.ph],b.x,b.y+40);
+// shots
+shots.forEach(function(s){if(s.m.length<3){X.fillStyle='#ff5d73';X.beginPath();X.arc(s.x,s.y,6,0,6.3);X.fill()}else{X.fillStyle='#ff5d73';X.fillRect(s.x-28,s.y-8,56,16);X.fillStyle='#fff';X.font='bold 9px sans-serif';X.fillText(s.m,s.x,s.y)}});
+// projectiles
+proj.forEach(function(p){X.font='18px sans-serif';X.fillText('✅',p.x,p.y)});
+// ghosts
+ghosts.forEach(function(g){X.globalAlpha=.55+Math.sin(g.ph)*.3;X.font='28px sans-serif';X.fillText('👻',g.x,g.y);X.globalAlpha=1});
+// player
+X.globalAlpha=S.inv>0&&(S.inv*12|0)%2?.35:1;X.font='30px sans-serif';X.fillText(S.san<30?'😵':'🧑‍⚕️',P.x,P.y);X.globalAlpha=1;
+// particles
+parts.forEach(function(p){X.globalAlpha=Math.max(0,p.l*1.5);X.fillStyle=p.c;X.fillRect(p.x-2,p.y-2,4,4)});X.globalAlpha=1;
+floaters.forEach(function(f){X.globalAlpha=f.l;X.fillStyle=f.c;X.font='bold 12px sans-serif';X.fillText(f.t,f.x,f.y)});X.globalAlpha=1;
+// haunted lighting
+var dark=Math.min(.82,.35+S.phase*.12+S.mess*.2)*(S.quiet>0?.5:1);var grd=X.createRadialGradient(P.x,P.y,30,P.x,P.y,170+S.flick*40);
+grd.addColorStop(0,'rgba(0,0,10,0)');grd.addColorStop(1,'rgba(0,0,10,'+(dark+(1-S.flick)*.15)+')');X.fillStyle=grd;X.fillRect(0,0,W,H);
+if(S.quiet>0){X.fillStyle='rgba(124,242,201,.08)';X.fillRect(0,0,W,H)}
+if(input.on&&mode=='play'){X.strokeStyle='rgba(124,242,201,.5)';X.lineWidth=2;X.beginPath();X.arc(input.x,input.y,14,0,6.3);X.stroke()}
+X.restore();hud()}
+function hud(){$('sanB').style.width=Math.max(0,S.san)+'%';$('sanT').textContent=Math.max(0,S.san|0);$('sanB').style.background=S.san<30?'#ff5d73':'';
+$('bossB').style.width=(boss.hp/boss.max*100)+'%';$('bossT').textContent=boss.hp|0;$('bossName').textContent=['','📟 Pager Boss','📳 Vibrate Mode','👻 Ghost Pager'][boss.ph];
+$('phT').textContent=S.phase;$('scT').textContent=S.score|0;$('ntT').textContent=S.notes;$('hiT').textContent=hi}
+/* ---------- loop ---------- */
+function loop(ts){var dt=Math.min(.05,Math.max(0,(ts-last)/1000));last=ts;if(mode=='play')update(dt);else if(mode=='rr')updateRR(dt);
+if(mode!='title')draw();requestAnimationFrame(loop)}
+/* ---------- controls ---------- */
+function start(){reset();['title','how','end','pause','quiz','rr'].forEach(function(i){show(i,0)});mode='play';last=performance.now();toast('📟 PHASE 1: "K 3.3, please advise"');SFX.page()}
+function pause(on){if(on&&mode=='play'){mode='pause';show('pause',1)}else if(!on&&mode=='pause'){mode='play';show('pause',0);last=performance.now()}}
+$('playB').onclick=start;$('againB').onclick=start;$('howB').onclick=function(){show('title',0);show('how',1)};$('howBack').onclick=function(){show('how',0);show('title',1)};
+$('pauseB').onclick=function(){pause(mode=='play')};$('resB').onclick=function(){pause(false)};
+$('quitB').onclick=$('titleB').onclick=function(){mode='title';['pause','end'].forEach(function(i){show(i,0)});show('title',1)};
+function toggleMute(){muted=!muted;$('muteB').textContent=muted?'🔇':'🔊'}$('muteB').onclick=toggleMute;
+function cpos(e){var r=C.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
+C.addEventListener('pointerdown',function(e){e.preventDefault();var p=cpos(e);input={x:p.x,y:p.y-30,on:true};try{C.setPointerCapture(e.pointerId)}catch(_){}});
+C.addEventListener('pointermove',function(e){if(input.on){var p=cpos(e);input.x=p.x;input.y=p.y-30}});
+['pointerup','pointercancel'].forEach(function(t){C.addEventListener(t,function(){input.on=false})});
+addEventListener('keydown',function(e){var k=e.key.length==1?e.key.toLowerCase():e.key;keys[k]=1;if(k=='p'||k==' '){e.preventDefault();pause(mode=='play')}if(k=='m')toggleMute();
+if(k=='Enter'&&mode=='title')start();if(/Arrow/.test(k))e.preventDefault()});
+addEventListener('keyup',function(e){keys[e.key.length==1?e.key.toLowerCase():e.key]=0});
+document.addEventListener('visibilitychange',function(){if(document.hidden)pause(true)});
+function fit(){var avail=innerHeight-C.getBoundingClientRect().top-70;var w=Math.min(C.parentNode.clientWidth,avail*W/H);if(w>200)C.style.width=w+'px',C.style.margin='0 auto'}
+addEventListener('resize',fit);
+reset();hud();requestAnimationFrame(loop);
+/* ---------- self-test ---------- */
+window.addEventListener('load',function(){setTimeout(function(){fit();var c=[],ok=function(n,v){c.push([n,!!v])},wasM=muted;muted=true;
+try{
+ok('page renders',C.getContext('2d')&&C.getBoundingClientRect().width>200&&document.querySelector('h1'));
+reset();input={x:P.x+100,y:P.y-100,on:true};var x0=P.x;for(var i=0;i<20;i++)update(.03);ok('touch-drag moves player',P.x>x0+40);input.on=false;
+reset();notes=[{x:P.x,y:P.y,ph:0,l:5}];update(.01);for(i=0;i<40;i++){S.rrNext=99;update(.03)}ok('notes damage the boss',boss.hp<100&&S.notes==1);
+reset();boss.hp=1;mode='play';damageBoss(5);var adv=mode=='wait';ok('boss defeat advances phase',adv);
+reset();S.forceRR='order';startRR();var rv=mode=='rr'&&!$('rr').hidden;rrDone(true);ok('rapid response interrupts & resolves',rv&&$('rr').hidden&&mode=='play');
+reset();S.cons.cards=99;ok('consult reveal works',CONS[topConsult()].n=='Cardiology'&&Object.keys(CONS).length>=12);
+var small=[].filter.call(document.querySelectorAll('button'),function(b){var r=b.getBoundingClientRect();return r.width&&(r.height<44||r.width<44)});ok('tap targets ≥44px',small.length==0);
+var ext=[].some.call(document.querySelectorAll('[src],link[href]'),function(el){return /^(https?:)?\/\//.test(el.getAttribute('src')||el.getAttribute('href'))});
+var res=performance.getEntriesByType?performance.getEntriesByType('resource').length:0;ok('no external requests',!ext&&res==0);
+ok('HUD bars visible',$('sanB').getBoundingClientRect().height>=8&&$('bossB').getBoundingClientRect().width>0);
+ok('footer present',/Not medical advice/.test(document.querySelector('footer').textContent));
+}catch(e){ok('self-test crashed: '+e.message,false)}
+ok('no console errors',errs==0);
+// restore title state
+reset();mode='title';['rr','quiz','end','pause'].forEach(function(i){show(i,0)});show('title',1);muted=wasM;$('toast').style.opacity=0;clearTimeout(toastT);draw();
+var p=c.filter(function(x){return x[1]}).length;$('st').textContent='Checks passed '+p+' of '+c.length;$('st').title=c.map(function(x){return(x[1]?'✓ ':'✗ ')+x[0]}).join('\n');window.__checks=c},300)});
+</script></body></html>
