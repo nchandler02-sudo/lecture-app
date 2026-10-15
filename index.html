@@ -1,15 +1,97 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI in Medicine: Live Mad Lib App</title>
-<style>:root{--bg:#070d1a;--panel:#101a2e;--line:#22365a;--ink:#e8edf3;--mut:#93a3bd;--acc:#2dd4bf;--hot:#fcd34d}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,Segoe UI,Roboto,sans-serif}
-.w{max-width:640px;margin:0 auto;padding:28px 18px}h1{font-size:30px;margin:.2em 0}.tag{color:var(--acc);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:13px}
-.s{font-size:22px;font-weight:700;background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:18px;line-height:1.5}
-.s mark{background:none;color:var(--hot)}.pill{display:inline-block;margin-top:18px;background:var(--acc);color:#04201d;font-weight:800;border-radius:999px;padding:10px 18px}
-ol{color:var(--mut)}footer{color:var(--mut);font-size:13px;margin-top:32px;border-top:1px solid var(--line);padding-top:12px}</style></head>
-<body><div class="w"><div class="tag">AI in Medicine · October 15, 2026</div>
-<h1>The Live Mad Lib App</h1>
-<p>During the lecture, you'll answer five Kahoot questions. Your votes fill in the blanks below, and AI builds the app live, in front of you.</p>
-<div class="s">Build <mark>___</mark> for <mark>___</mark> that <mark>___</mark>, styled like <mark>___</mark>, with <mark>___</mark>.</div>
-<ol><li>What kind of app?</li><li>Who uses it?</li><li>What does it do?</li><li>What should it look like?</li><li>Pick one twist.</li></ol>
-<span class="pill">Interactive app coming soon</span>
-<footer>Placeholder page. Entertainment only. Not medical advice.</footer></div></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Pager Boss: Night Float Survival</title>
+<style>
+:root{--bg:#dfe9e4;--ink:#1d2a2a;--acc:#0e9f8a;--hot:#e5484d}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#cfdcd6;color:var(--ink);font:16px/1.4 -apple-system,Segoe UI,Roboto,sans-serif;overscroll-behavior:none}
+.w{max-width:520px;margin:0 auto;padding:10px;display:flex;flex-direction:column;min-height:100%}
+h1{font-size:22px;margin:4px 0}.sub{font-size:13px;margin:0 0 6px;color:#3d5450}
+#hud{display:flex;gap:6px;font-weight:700;font-size:14px}#hud div{flex:1;background:#fff;border-radius:10px;padding:6px;text-align:center}
+.bar{height:8px;background:#ddd;border-radius:4px;overflow:hidden;margin-top:3px}.bar i{display:block;height:100%;background:var(--acc)}
+#wrap{position:relative;margin-top:8px}
+canvas{width:100%;display:block;border-radius:14px;touch-action:none;background:#f4fbf6;box-shadow:0 0 0 3px #b8c9c2}
+.ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:rgba(20,30,30,.82);color:#fff;border-radius:14px;padding:18px}
+.ov[hidden]{display:none}
+button{font:inherit;font-weight:800;min-height:52px;min-width:150px;padding:12px 20px;border:0;border-radius:14px;background:var(--acc);color:#fff;margin-top:12px;cursor:pointer}
+#rr{background:rgba(229,72,77,.9);animation:fl .4s infinite alternate}@keyframes fl{to{background:rgba(160,20,30,.9)}}
+#rr .t{position:absolute;width:60px;height:60px;border-radius:50%;background:#fff;color:var(--hot);font-size:28px;min-width:0;padding:0;margin:0}
+footer{font-size:12px;color:#3d5450;margin-top:auto;padding-top:10px;text-align:center}
+.disc{font-size:12px;color:#3d5450;margin:6px 0 0}
+</style></head><body><div class="w">
+<h1>📟 Pager Boss</h1><p class="sub">Night float survival. Drag anywhere on the room to move. Dodge pages, grab ☕ 🍪 and 🤫, outlast the shift.</p>
+<div id="hud"><div>⏱ <span id="tm">0</span>s</div><div>⭐ <span id="sc">0</span></div><div>⚡<div class="bar"><i id="en" style="width:100%"></i></div></div></div>
+<div id="wrap"><canvas id="c" width="360" height="480"></canvas>
+<div class="ov" id="start"><h2>3:12 AM. Your pager buzzes.</h2><p>"K 3.3, please advise."<br>Survive the Pager Boss as long as you can.</p><button id="go">Start shift</button></div>
+<div class="ov" id="rr" hidden><h2>🚨 SURPRISE RAPID RESPONSE 🚨</h2><p>Tap all 5 bells fast!</p></div>
+<div class="ov" id="end" hidden><h2 id="et"></h2><p id="ep"></p><button id="again">New shift</button></div></div>
+<p class="disc">A joke game. Not real clinical guidance. No data is stored.</p>
+<footer>Built live by AI at the AI in Medicine lecture, October 15, 2026. Not medical advice.<br><b id="st">Checks running…</b></footer></div>
+<script>
+var errs=0;window.addEventListener('error',function(){errs++});
+var C=document.getElementById('c'),X=C.getContext('2d'),W=360,H=480,$=function(i){return document.getElementById(i)};
+var S,P,tgt,items,shots,mess,keys={},running=false,last=0,rrNext,rrOn=false,rrLeft=0,rrT=0;
+var PAGES=['K 3.3??','Tylenol pls','Diet order?','Pt wants nap','Fax came in','Is bed 4 ok?','Sign this','Call back pls'];
+function reset(){S={t:0,score:0,en:100,inv:0,quiet:0};P={x:180,y:400,r:16};tgt=null;items=[];shots=[];mess=[];
+B={x:180,y:70,vx:1.6,cd:1.2};rrNext=12+Math.random()*10;rrOn=false}
+var B;reset();
+function spawnItem(){var k=Math.random(),t=k<.5?'☕':k<.85?'🍪':'🤫';items.push({x:30+Math.random()*300,y:140+Math.random()*310,t:t,life:7})}
+function fire(){var a=Math.atan2(P.y-B.y,P.x-B.x)+(Math.random()-.5)*.5,sp=1.6+S.t/40;
+shots.push({x:B.x,y:B.y+20,vx:Math.cos(a)*sp*60,vy:Math.sin(a)*sp*60,m:PAGES[Math.random()*PAGES.length|0]})}
+function step(dt){if(rrOn){rrT-=dt;if(rrT<=0)endRR(false);return}
+S.t+=dt;S.en-=dt*(2.2+S.t/60);S.score+=dt*10;if(S.inv>0)S.inv-=dt;if(S.quiet>0)S.quiet-=dt;
+var mx=0,my=0;if(tgt){mx=tgt.x-P.x;my=tgt.y-P.y}
+if(keys.ArrowLeft)mx=-50;if(keys.ArrowRight)mx=50;if(keys.ArrowUp)my=-50;if(keys.ArrowDown)my=50;
+var d=Math.hypot(mx,my);if(d>3){var v=Math.min(d,230*dt);P.x+=mx/d*v;P.y+=my/d*v}
+P.x=Math.max(16,Math.min(W-16,P.x));P.y=Math.max(130,Math.min(H-16,P.y));
+B.x+=B.vx*(1+S.t/50);if(B.x<40||B.x>W-40)B.vx*=-1;
+if(S.quiet<=0){B.cd-=dt;if(B.cd<=0){fire();B.cd=Math.max(.35,1.3-S.t/60)}}
+if(Math.random()<dt*.9)spawnItem();if(Math.random()<dt*.25+S.t/4000)mess.push({x:Math.random()*W,y:120+Math.random()*360,t:['📄','🥤','🧦','📦','🍕'][Math.random()*5|0]});
+shots.forEach(function(s){s.x+=s.vx*dt;s.y+=s.vy*dt;if(S.inv<=0&&Math.hypot(s.x-P.x,s.y-P.y)<P.r+10){s.dead=1;S.en-=14;S.inv=.8}});
+shots=shots.filter(function(s){return !s.dead&&s.y<H+20&&s.y>-20&&s.x>-60&&s.x<W+60});
+items.forEach(function(i){i.life-=dt;if(Math.hypot(i.x-P.x,i.y-P.y)<P.r+14){i.dead=1;
+if(i.t=='☕'){S.en=Math.min(100,S.en+18);S.score+=25}else if(i.t=='🍪'){S.en=Math.min(100,S.en+10);S.score+=15}else{S.quiet=4;shots=[];S.score+=60}}});
+items=items.filter(function(i){return !i.dead&&i.life>0});
+rrNext-=dt;if(rrNext<=0)startRR();if(S.en<=0)over()}
+function draw(){var g=Math.min(1,S.t/120);X.fillStyle='rgb('+(244-g*30)+','+(251-g*35)+','+(246-g*45)+')';X.fillRect(0,0,W,H);
+for(var i=0;i<3;i++){X.fillStyle=(Math.random()<.02*g?'#bbb':'#fffde8');X.fillRect(40+i*110,4,60,8)}
+X.fillStyle='#9bb';X.fillRect(0,118,W,3);X.font='22px sans-serif';X.textAlign='center';X.textBaseline='middle';
+X.globalAlpha=.7;mess.forEach(function(m){X.fillText(m.t,m.x,m.y)});X.globalAlpha=1;
+X.fillText('🛏️',40,450);items.forEach(function(i){X.globalAlpha=Math.min(1,i.life);X.font='26px sans-serif';X.fillText(i.t,i.x,i.y)});X.globalAlpha=1;
+X.font='44px sans-serif';X.save();X.translate(B.x,B.y);X.rotate(Math.sin(S.t*20)*.12);X.fillText('📟',0,0);X.restore();
+X.font='bold 11px sans-serif';X.fillStyle='#e5484d';X.fillText(S.quiet>0?'(silent… for now)':'PAGER BOSS',B.x,B.y+34);
+shots.forEach(function(s){X.fillStyle='#e5484d';X.beginPath();X.roundRect?X.roundRect(s.x-30,s.y-9,60,18,8):X.rect(s.x-30,s.y-9,60,18);X.fill();X.fillStyle='#fff';X.font='bold 10px sans-serif';X.fillText(s.m,s.x,s.y)});
+X.font='32px sans-serif';X.globalAlpha=S.inv>0&&(S.inv*10|0)%2?.3:1;X.fillText(S.en<30?'🥱':'🧑‍⚕️',P.x,P.y);X.globalAlpha=1;
+if(S.quiet>0){X.fillStyle='rgba(14,159,138,.15)';X.fillRect(0,0,W,H)}
+$('tm').textContent=S.t|0;$('sc').textContent=S.score|0;var e=$('en');e.style.width=Math.max(0,S.en)+'%';e.style.background=S.en<30?'#e5484d':'#0e9f8a'}
+function loop(ts){if(!running)return;var dt=Math.min(.05,(ts-last)/1000||0);last=ts;step(dt);draw();requestAnimationFrame(loop)}
+function startRR(){rrOn=true;rrLeft=5;rrT=4.5;var o=$('rr');o.querySelectorAll('.t').forEach(function(b){b.remove()});o.hidden=false;
+var r=o.getBoundingClientRect();for(var i=0;i<5;i++){var b=document.createElement('button');b.className='t';b.textContent='🔔';
+b.style.left=(10+Math.random()*75)+'%';b.style.top=(30+Math.random()*58)+'%';b.style.transform='translate(-50%,-50%)';
+b.onpointerdown=function(e){e.stopPropagation();this.remove();if(--rrLeft<=0)endRR(true)};o.appendChild(b)}}
+function endRR(ok){rrOn=false;$('rr').hidden=true;rrNext=15+Math.random()*12;if(ok){S.score+=100}else S.en-=25}
+function over(){running=false;$('et').textContent='Shift over at '+(S.t|0)+'s';
+var r=S.t<30?'The pager won. It always does.':S.t<60?'Solid. You earned a granola bar.':S.t<100?'Legend of night float.':'Sign-out achieved. Go home.';
+$('ep').innerHTML='Score: <b>'+(S.score|0)+'</b><br>'+r;$('end').hidden=false}
+function go(){reset();$('start').hidden=true;$('end').hidden=true;running=true;last=performance.now();requestAnimationFrame(loop)}
+$('go').onclick=go;$('again').onclick=go;
+function pos(e){var r=C.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
+C.addEventListener('pointerdown',function(e){tgt=pos(e);C.setPointerCapture&&C.setPointerCapture(e.pointerId)});
+C.addEventListener('pointermove',function(e){if(tgt||e.pointerType=='mouse'&&e.buttons)tgt=pos(e)});
+C.addEventListener('pointerup',function(){tgt=null});C.addEventListener('pointercancel',function(){tgt=null});
+addEventListener('keydown',function(e){keys[e.key]=1});addEventListener('keyup',function(e){keys[e.key]=0});
+draw();
+// Self-test
+window.addEventListener('load',function(){setTimeout(function(){var c=[],ok=function(n,v){c.push([n,!!v])};
+ok('page renders',C.getContext&&document.querySelector('h1'));
+var s0=JSON.stringify(P);reset();tgt={x:300,y:300};running=false;for(var i=0;i<20;i++)step(.03);ok('drag moves player',P.x>200);
+var e0=S.en;items=[{x:P.x,y:P.y,t:'☕',life:5}];S.en=50;step(.01);ok('coffee restores energy',S.en>55);
+startRR();var rv=!$('rr').hidden;endRR(true);ok('rapid response interrupts',rv&&$('rr').hidden);
+reset();tgt=null;draw();
+var small=[].filter.call(document.querySelectorAll('button'),function(b){var r=b.getBoundingClientRect();return r.width&&(r.height<44||r.width<44)});ok('tap targets ≥44px',small.length==0);
+var ext=[].some.call(document.querySelectorAll('[src],link[href]'),function(el){return /^https?:/.test(el.getAttribute('src')||el.getAttribute('href'))});
+var res=performance.getEntriesByType?performance.getEntriesByType('resource').length:0;ok('no external requests',!ext&&res==0);
+ok('footer present',/Not medical advice/.test(document.querySelector('footer').textContent));
+ok('no console errors',errs==0);
+var p=c.filter(function(x){return x[1]}).length;$('st').textContent='Checks passed '+p+' of '+c.length;$('st').title=c.map(function(x){return(x[1]?'✓ ':'✗ ')+x[0]}).join('\n');window.__checks=c},300)});
+</script></body></html>
