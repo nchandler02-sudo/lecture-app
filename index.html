@@ -72,13 +72,15 @@ var $=function(i){return document.getElementById(i)};
 var C=$('c'),X=C.getContext('2d'),W=360,H=520,TOP=110;
 /* ---------- audio ---------- */
 var AC=null,muted=false;
-function snd(f,d,type,vol,slide){if(muted)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();var o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime;
+function snd(f,d,type,vol,slide){if(muted||!AC)return;try{if(AC.state=='suspended')AC.resume();var o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime;
 o.type=type||'square';o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(slide,t+d);g.gain.setValueAtTime(vol||.06,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d+.02)}catch(e){}}
 var SFX={page:function(){snd(1400,.08,'square',.04);setTimeout(function(){snd(1400,.08,'square',.04)},110)},
 pick:function(){snd(660,.1,'triangle',.08,990)},hurt:function(){snd(200,.25,'sawtooth',.07,70)},hit:function(){snd(300,.12,'square',.06,600)},
 ghost:function(){snd(520,.6,'sine',.05,260)},alarm:function(){for(var i=0;i<4;i++)setTimeout(function(){snd(880,.15,'square',.06,660)},i*180)},
 win:function(){[523,659,784,1046].forEach(function(f,i){setTimeout(function(){snd(f,.2,'triangle',.08)},i*120)})},
 lose:function(){[392,330,262,196].forEach(function(f,i){setTimeout(function(){snd(f,.3,'sawtooth',.05)},i*180)})}};
+function unlockAudio(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}}
+addEventListener('pointerdown',unlockAudio,true);addEventListener('keydown',unlockAudio,true);
 /* ---------- consult data ---------- */
 var CONS={
 neph:{n:'Nephrology',e:'🫘',t:'"Before we discuss the potassium… why is there no urine sodium?"',d:'They have opinions about your 3.3. Several. With a flowsheet.'},
