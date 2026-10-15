@@ -1,5 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%91%BB%3C/text%3E%3C/svg%3E">
 <meta name="theme-color" content="#0b0f17">
 <title>Pager Boss II: The Haunted Night Float</title>
 <style>
@@ -268,7 +269,7 @@ reset();S.forceRR='order';startRR();var rv=mode=='rr'&&!$('rr').hidden;rrDone(tr
 reset();S.cons.cards=99;ok('consult reveal works',CONS[topConsult()].n=='Cardiology'&&Object.keys(CONS).length>=12);
 var small=[].filter.call(document.querySelectorAll('button'),function(b){var r=b.getBoundingClientRect();return r.width&&(r.height<44||r.width<44)});ok('tap targets ≥44px',small.length==0);
 var ext=[].some.call(document.querySelectorAll('[src],link[href]'),function(el){return /^(https?:)?\/\//.test(el.getAttribute('src')||el.getAttribute('href'))});
-var res=performance.getEntriesByType?performance.getEntriesByType('resource').length:0;ok('no external requests',!ext&&res==0);
+var res=performance.getEntriesByType?performance.getEntriesByType('resource').filter(function(r){return !/^data:/.test(r.name)&&r.name.indexOf(location.origin)!==0}).length:0;ok('no external requests',!ext&&res==0);
 ok('HUD bars visible',$('sanB').getBoundingClientRect().height>=8&&$('bossB').getBoundingClientRect().width>0);
 ok('footer present',/Not medical advice/.test(document.querySelector('footer').textContent));
 }catch(e){ok('self-test crashed: '+e.message,false)}
